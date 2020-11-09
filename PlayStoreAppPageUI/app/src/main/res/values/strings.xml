@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Play-Store-App-Page-UI</string>
+    <string name="cover_background">cover-background</string>
+    <string name="appName">Maps</string>
+    <string name="appOwner">Google Inc.</string>
+    <string name="requiredAndroidVersion">3+</string>
+    <string name="uninstallButtonText">UNINSTALL</string>
+    <string name="openButtonText">OPEN</string>
+    <string name="appIcon">appIcon</string>
+    <string name="downloadsCount">5,493,032</string>
+    <string name="downloadsText">Downloads</string>
+    <string name="downloadsDescription">downloads</string>
+    <string name="downloadsCountImg">downloadsCount</string>
+    <string name="travel_local"><![CDATA[Travel & Local]]></string>
+    <string name="travel_local_img">travel_local_img</string>
+    <string name="similar_img">similar_img</string>
+    <string name="similar">Similar</string>
+    <string name="downloadsImageText">1</string>
+    <string name="ratingImageText">4.3</string>
+    <string name="littleDescription">Get the latest Google Maps app.</string>
+    <string name="whatsNewText">WHAT\'S NEW</string>
+    <string name="whatsNewDescription">• Easily find hours and phone numbers for large department stores with the new department store directory in Google Maps. (US only)</string>
+    <string name="readMoreText">READ MORE</string>
+    <string name="photos1">photos1</string>
+    <string name="photos2">photos2</string>
+    <string name="photos3">photos3</string>
+</resources>
