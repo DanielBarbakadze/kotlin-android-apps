@@ -9,75 +9,77 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
-import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cst.contacts.R
-import com.cst.contacts.adapter.CellClickListener
-import com.cst.contacts.adapter.ContactInfoListAdapter
 import com.cst.contacts.details.ContactDetailedActivity
 import com.cst.contacts.donottouch.ContactInfo
-import com.cst.contacts.donottouch.InfoType
 import com.cst.contacts.donottouch.mapToContactInfo
 import com.github.tamir7.contacts.Contacts
 
-fun InfoType.getString() =
-        when (this) {
-            InfoType.HOME -> "Home"
-            InfoType.MOBILE -> "Mobile"
-            InfoType.WORK -> "Work"
-            else -> "Other"
-        }
+class ContactsFragment : Fragment(R.layout.fragment_contacts) {
 
-class ContactsFragment : Fragment(R.layout.fragment_contacts), CellClickListener {
-
-    private lateinit var etFilter: EditText
-    private lateinit var recyclerView: RecyclerView
-
-    private var contacts = getContacts()
+    private var lettersList = mutableListOf<String>()
+    private var fullNamesList = mutableListOf<String>()
+    private var idsList = mutableListOf<Long>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        initViews(view)
-        initListeners()
         checkPermissionsAndGetContacts()
+
+        val name = getView()?.findViewById<EditText>(R.id.name)
+
+        name?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                bitch(s)
+            }
+        })
+
+    }
+
+    private fun bitch(text: Editable) {
+
+        val filteredContacts = getContacts().filter { it.name.contains(text.toString(), ignoreCase = true) }
+
+        for (contact in filteredContacts) {
+            Log.d("TAG", contact.name)
+        }
+        displayContacts(filteredContacts)
+
+        Toast.makeText(activity, "$text", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun addToList(letter: String, fullName: String, id: Long) {
+        lettersList.add(letter)
+        fullNamesList.add(fullName)
+        idsList.add(id)
+    }
+
+    private fun postToList(contacts: List<ContactInfo>) {
+        lettersList.clear()
+        fullNamesList.clear()
+        idsList.clear()
+        for (contact in contacts) {
+            addToList(contact.name.substring(0, 1), contact.name, contact.id)
+        }
     }
 
     private fun displayContacts(contacts: List<ContactInfo>) {
-        recyclerView.layoutManager =
-                LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        recyclerView.adapter = ContactInfoListAdapter(contacts, this)
-    }
+        /** ==== თქვენი კოდი ==== **/
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.contact_list_recycler)
+        postToList(contacts)
 
-    private fun initViews(view: View) {
-        recyclerView = view.findViewById(R.id.rvContacts)
-        etFilter = view.findViewById(R.id.etFilter)
-    }
-
-    private fun initListeners() {
-        etFilter.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                Log.d("ContactsFragment", "afterTextChanged: " + s.toString())
-
-                val contacts =
-                        contacts.filter { it.name.contains(s.toString(), ignoreCase = true) }
-
-                displayContacts(contacts)
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-    }
-
-    override fun onCellClickListener(contact: ContactInfo) {
-        val intent = Intent(activity, ContactDetailedActivity::class.java)
-        intent.putExtra("id", contact.id)
-        startActivity(intent)
+        if (recyclerView != null) {
+            recyclerView.layoutManager = LinearLayoutManager(view?.context)
+        }
+        if (recyclerView != null) {
+            recyclerView.adapter = RecyclerAdapter(lettersList, fullNamesList, idsList)
+        }
     }
 
     /** ======== ამის ქვევით კოდს არ შეეხოთ ============= **/

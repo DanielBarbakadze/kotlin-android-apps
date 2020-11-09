@@ -14,6 +14,6 @@ class ContactsActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.frameLayout, ContactsFragment())
                 .commit()
-    }
 
+    }
 }
